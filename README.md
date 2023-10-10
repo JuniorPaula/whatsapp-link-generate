@@ -1,4 +1,4 @@
-# Projeto CLI - Geração de Links do WhatsApp
+# Geração de Links do WhatsApp
 
 ## Pacote CLI:
 Este pacote CLI permite que você gere links do WhatsApp para vários números de telefone a partir da linha de comando. Ele oferece uma maneira conveniente de gerar links do WhatsApp para contatos individuais ou em massa.
