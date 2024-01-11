@@ -31,8 +31,8 @@ Este pacote API expõe um endpoint HTTP que permite que você envie uma lista de
 
 Para usar a API, siga estas etapas:
 
-1. Navegue até o diretório `./api/` no terminal.
-2. Inicie o servidor com o comando `go run main.go`.
+1. Navegue até o diretório `./cmd/` no terminal.
+2. Inicie o servidor com o comando `go run ./cmd/*`.
 3. Faça uma solicitação POST para `http://localhost:8080/generate-links` com um corpo JSON contendo a lista de números de telefone e a mensagem desejada.
 
 #### Exemplo
