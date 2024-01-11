@@ -11,7 +11,11 @@ func routes() http.Handler {
 	// http.HandleFunc("/generate-links", api.GenerateLinksHandler)
 	mux := chi.NewRouter()
 
+	// api routes
 	mux.Post("/generate-links", api.GenerateLinksHandler)
+
+	// ui routes
+	mux.Get("/", HomeHandler)
 
 	return mux
 }
