@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Gerador Link Whatsapp</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notie@4.3.1/dist/notie.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+          integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous"/>
+    <style>
+      body {
+          font-family: 'Arial', sans-serif;
+          background-color: #f8f9fa;
+          color: #495057;
+      }
+
+      .container {
+          margin-top: 50px;
+      }
+
+      h1 {
+          color: #128c7e;
+      }
+
+      h4 {
+          color: #343a40;
+      }
+
+      p {
+          color: #6c757d;
+      }
+
+      form {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+          color: #495057;
+      }
+
+      .btn {
+          background-color: #25d366;
+          color: #fff;
+          border: none;
+      }
+
+      .btn:hover {
+          background-color: #128c7e;
+          color: #fff;
+      }
+
+      #result {
+          margin-top: 20px;
+      }
+
+      a {
+          color: #007bff;
+          text-decoration: none;
+      }
+
+      a:hover {
+          text-decoration: underline;
+      }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <img src="https://static.whatsapp.net/rsrc.php/v3/y7/r/DSxOAUB0raA.png" width="200px" alt="">
+    <h1 class="text-center mb-4">Gerador de Links</h1>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h4>Modo de usar</h4>
+        <p>Para gerar o link do WhatsApp, basta preencher os campos abaixo e clicar no botão "Gerar Link do WhatsApp".</p>
+        <p>Ex: Número de Telefone: 55123456789 e Mensagem: Olá, tudo bem?</p>
+        <p>Ou, pode ser passado varios numeros separados por vírgulas.</p>
+        <p>Ex: Número de Telefone: 55123456789,55123456789,55123456789 e Mensagem: Olá, tudo bem?</p>
+      </div>
+    </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+              <form id="whatsappForm">
+                  <div class="mb-3">
+                      <label for="phoneNumber" class="form-label">Número de Telefone (com código do país):</label>
+                      <input type="text" class="form-control" id="phoneNumber" placeholder="Ex: 55123456789" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="message" class="form-label">Mensagem:</label>
+                      <textarea class="form-control" id="message" rows="3" placeholder="Digite sua mensagem..." required></textarea>
+                  </div>
+                  <button type="button" class="btn btn-lg" id="generateLink">Gerar Link do WhatsApp</button>
+              </form>
+
+              <div class="mt-4" id="result" style="display: none;">
+                  <h3>Links do WhatsApp:</h3>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    let btnGenerateLink = document.getElementById('generateLink');
+    
+    btnGenerateLink.addEventListener('click', function(evt) {
+      evt.preventDefault();
+
+      let message = document.getElementById('message').value;
+      let phoneNumbers = document.getElementById('phoneNumber').value;
+
+      if(!validateFields(phoneNumbers, message)) return;
+
+      phoneNumbers = phoneNumbers.split(',');
+      if (phoneNumbers.length > 1) {
+        phoneNumbers = phoneNumbers.map(function(phoneNumber) {
+          return phoneNumber.trim();
+        });
+      }
+
+      fetchApi(phoneNumbers, message);
+    })
+
+
+    function fetchApi(phoneNumbers, message) {
+      fetch('/generate-links', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          phone_numbers: phoneNumbers,
+          message: message
+        })
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        mountResult(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Ocorreu um erro ao gerar o link do WhatsApp.');
+      });
+    }
+
+    function mountResult(data) {
+      let links = data.whatsapp_links;
+
+      links.forEach(link => {
+        let aLink = document.createElement('a');
+        aLink.setAttribute('href', link);
+        aLink.setAttribute('target', '_blank');
+        aLink.innerHTML = link + '<br><br>';
+
+        
+        document.getElementById('result').appendChild(aLink);
+        document.getElementById('result').style.display = 'block';
+      });
+    }
+
+    function validateFields(phoneNumbers, message) {
+      if (phoneNumbers.length === 0) {
+        alert('O campo número de telefone é obrigatório.')
+        return false;
+      }
+
+      if (message.length === 0) {
+        alert('O campo mensagem é obrigatório.');
+        return false;
+      }
+
+      return true;
+    }
+
+  </script>
+</body>
+</html>

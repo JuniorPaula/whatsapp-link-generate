@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -16,19 +16,7 @@ type ResponseBody struct {
 	WhatsappLinks []string `json:"whatsapp_links"`
 }
 
-func main() {
-	http.HandleFunc("/generate-links", generateLinksHandler)
-
-	port := ":8080"
-	fmt.Printf("Server running on port %s\n", port)
-	err := http.ListenAndServe(port, nil)
-	if err != nil {
-		panic(err)
-	}
-
-}
-
-func generateLinksHandler(w http.ResponseWriter, r *http.Request) {
+func GenerateLinksHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
